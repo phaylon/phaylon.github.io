@@ -39,7 +39,7 @@ fn main() {
 }
 ```
 
-## Guarding Against ZSTs at Compile-Time
+## Guarding against ZSTs at Compile-Time
 
 ```rust
 trait AssertNonZst: Sized {
@@ -61,5 +61,36 @@ fn main() {
 }
 ```
 
+## Newtyping with Opaque Types and Type Aliases
 
+```rust
+#![feature(min_type_alias_impl_trait)]
 
+trait AddSelf: std::ops::Add<Output = Self> + Sized {}
+impl<T> AddSelf for T where T: std::ops::Add<Output = Self> {}
+
+type MyI64 =
+    impl std::fmt::Debug
+        + std::fmt::Display
+        + AddSelf
+        + Copy
+        + From<i64>
+        + Into<i64>;
+
+fn my_i64(value: i64) -> MyI64 { value }
+
+fn main() {
+
+    // compiles
+    let a = my_i64(23);
+    let b = my_i64(42);
+    println!("{} + {} = {}", a, b, a+b);
+    
+    let x = MyI64::from(2i64 * a.into());
+    println!("{}", x);
+    
+    // fail to compile
+    let x = a + 3i64;
+    let x = a * a;
+}
+```

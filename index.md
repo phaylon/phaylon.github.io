@@ -1,2 +1,4 @@
 
-Work in progress.
+## Rust
+
+* [Shenanigans](rust/shenanigans)

@@ -1,6 +1,10 @@
 
 # Rust Shenanigans
 
+A Warning: These are the result of me playing around and trying to
+get Rust to do interesting things. The examples here might be faulty,
+full of downsides, or plain wrong.
+
 ## Move Detection
 
 ```rust

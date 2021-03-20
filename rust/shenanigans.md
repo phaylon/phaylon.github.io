@@ -1,5 +1,7 @@
 
-# Move Detection
+# Rust Shenanigans
+
+## Move Detection
 
 ```rust
 pub struct MoveDetector {
@@ -36,3 +38,28 @@ fn main() {
     assert!(!md.has_moved());
 }
 ```
+
+## Guarding Against ZSTs at Compile-Time
+
+```rust
+trait AssertNonZst: Sized {
+    const ZST_DETECT: usize = 1 / std::mem::size_of::<Self>();
+    fn assert_non_zst() -> usize { Self::ZST_DETECT + 0 }
+}
+
+impl<T> AssertNonZst for T {}
+
+// compiles
+fn main() {
+    i32::assert_non_zst();
+}
+
+// fails to compile
+fn main() {
+    struct Zst;
+    Zst::assert_non_zst();
+}
+```
+
+
+
